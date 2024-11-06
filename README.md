@@ -1,2 +1,2 @@
-# JobTrack
-This will help the software engineers in the market who are actively looking for a new job or for a change
+# JobQuest
+This will help job seekers in the market who are actively looking for a new job and can't make a note of lists where they have applied or want to apply.
