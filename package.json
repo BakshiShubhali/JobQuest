@@ -1,19 +1,21 @@
 {
-  "name": "jobtrack",
-  "version": "1.0.0",
-  "description": "description-test",
-  "main": "app.js",
+  "name": "jobquest",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BakshiShubhali/JobTrack.git"
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "^4.18.2",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.1",
+    "pg": "^8.13.1"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/BakshiShubhali/JobTrack/issues"
-  },
-  "homepage": "https://github.com/BakshiShubhali/JobTrack#readme"
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
 }
