@@ -10,7 +10,12 @@ const user = {};
 /* { HTTP METHOD - POST, API ENDPOINT - http://localhost:3336/user/addUser }*/
 user.addUser = async (req, res, next) => {
     try {
-      let checkUser = await userModel.findOne({ email : req.body.email});
+      let checkUser = await userModel.findOne({
+        where: {
+          email: req.body.email,
+        },
+        raw: true
+      });
       if (checkUser) {
         return res.status(200).send({
             status: true,
