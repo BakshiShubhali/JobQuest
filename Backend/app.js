@@ -5,47 +5,46 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const sequelize = require('./src/config/db.js');
-const userRoutes = require('./src/routes/userRoutes.js');
+const userRoutes = require('./src/routes/userRoutes.js'); // Import routes
 
 var app = express();
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+
+// View engine setup
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
+
+// Middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+
+// Register routes
+app.use(userRoutes); // Add this line to register the user routes
+
+// Catch 404 and forward to error handler (Place after all route registrations)
+app.use(function (req, res, next) {
+  next(createError(404)); // Pass error to the next middleware if no route matches
 });
-const PORT = process.env.port || 3333;
-app.listen(PORT, () => {
-  console.error("app has been started at port: " + PORT);
-});
 
-(async () => {
-    try 
-    {
-      await sequelize.sync({ force: false }); // Sync models with database
-      // app.listen(PORT, () => {
-      //   console.log(`Server is running on port ${PORT}`);
-      // });
-    } 
-    catch (error) {
-      console.error('Error starting the server:', error);
-    }
-  })();
-
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+// Error handler
+app.use(function (err, req, res, next) {
+   // Set locals for error message and details (only in development)
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+
+ // Send error response as JSON
+ res.status(err.status || 500).json({ error: err.message });
 });
+
+// Sync database and start the server
+const PORT = process.env.PORT || 3336;
+
+sequelize.sync({ force: false }).then(() => {
+  app.listen(PORT, () => {
+    console.log(`App is listening on port ${PORT}`);
+  });
+});
+
 module.exports = app;
