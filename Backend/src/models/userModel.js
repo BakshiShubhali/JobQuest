@@ -20,9 +20,13 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-}, {
-  tableName: 'users', // Optional: define table name
-  timestamps: true, // Automatically manages `createdAt` and `updatedAt`
+  },{
+        sequelize,
+        freezeTableName: true,
+        underscored: true,
+        timestamps: true,  // Automatically manages `createdAt` and `updatedAt`
+       tableName: 'users', // Optional: define table name
+  
 });
 
 module.exports = User;
