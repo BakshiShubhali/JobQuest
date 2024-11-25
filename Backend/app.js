@@ -5,7 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const sequelize = require('./src/config/db.js');
-const userRoutes = require('./src/routes/userRoutes.js'); // Import routes
+const userRoutes = require('./src/routes/userRoutes.js'); // Import user routes
+const jobRoutes = require('./src/routes/jobRoutes.js'); // Import user routes
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Register routes
 app.use(userRoutes); // Add this line to register the user routes
+app.use(jobRoutes); // Job routes
 
 // Catch 404 and forward to error handler (Place after all route registrations)
 app.use(function (req, res, next) {
