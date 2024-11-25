@@ -6,8 +6,6 @@ const userController = require('../controllers/userController');
 router.group('/user', (userRoutes) => {
   userRoutes.post('/addUser', userController.addUser);
   userRoutes.get('/getAllUsers', userController.getAllUsers);
-  
 });
-
 
 module.exports = router;

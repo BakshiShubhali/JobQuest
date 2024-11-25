@@ -25,7 +25,7 @@ const User = sequelize.define('User', {
         freezeTableName: true,
         underscored: true,
         timestamps: true,  // Automatically manages `createdAt` and `updatedAt`
-       tableName: 'users', // Optional: define table name
+        tableName: 'users', // Optional: define table name
   
 });
 
