@@ -8,4 +8,8 @@ router.group('/job', (jobRoutes) => {
   jobRoutes.get('/getAllJobs', jobController.getAllJobs);
 });
 
+router.group('/document', (documentRoutes) => {
+  documentRoutes.post('/uploadDocument', jobController.uploadDocument);
+});
+
 module.exports = router;

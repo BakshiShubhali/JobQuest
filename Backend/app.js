@@ -43,7 +43,7 @@ app.use(function (err, req, res, next) {
 // Sync database and start the server
 const PORT = process.env.PORT || 3336;
 
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
   app.listen(PORT, () => {
     console.log(`App is listening on port ${PORT}`);
   });

@@ -1,36 +1,41 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+const sequelize = require('../config/db'); 
+const User = require('./userModel');  // Ensure User Model is imported correctly
 
+// Define the Job model
 const Job = sequelize.define('Job', {
   job_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
-  // user_id: {
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users', // Name of the User table
+      key: 'id', // Primary key in the User table
+    },
+    onDelete: 'CASCADE', // Deletes the job if the associated user is deleted
+  },
+  // company_id: {
   //   type: DataTypes.INTEGER,
-  //   allowNull: false,
-  //   // foreignkey: true,
+  //   allowNull: true,
   //   references: {
-  //       model: 'users',  // This should match the table name of the Users model
-  //       key: 'user_id',       // The column in the User table to which this foreign key is pointing
-  //     },
+  //     model: 'companies', // Name of the Company table
+  //     key: 'company_id', // Primary key in the Company table
+  //   },
+  //   onDelete: 'SET NULL', // Sets `company_id` to NULL if the associated company is deleted
   // },
   // document_id:{
   //   type: DataTypes.INTEGER,
   //   allowNull: true,
+  //   foreignkey: true,
   //   references: {
   //       model: 'documents',  // This should match the table name of the Documents model
   //       key: 'document_id',       // The column in the Documents table to which this foreign key is pointing
   //     },
-  // },
-  // company_id: {
-  //   type: DataTypes.INTEGER,
-  //   unique: true,
-  //   references: {
-  //       model: 'companies',  // This should match the table name of the Companies model
-  //       key: 'company_id',       // The column in the Companies table to which this foreign key is pointing
-  //     },
+  //     onDelete: 'SET NULL',
   // },
   job_title: {
     type: DataTypes.STRING,
@@ -68,7 +73,6 @@ const Job = sequelize.define('Job', {
   },
   follow_date: {
     type: DataTypes.DATE,
-    // allowNull: false,
     allowNull: true,
   },
   personal_note: {
@@ -76,46 +80,16 @@ const Job = sequelize.define('Job', {
     allowNull: true,
   }
 },{
-        sequelize,
-        freezeTableName: true,
-        underscored: true,
-        timestamps: true,  // Automatically manages `createdAt` and `updatedAt`
-       tableName: 'jobs', // Optional: define table name
+    sequelize,
+    freezeTableName: true,
+    underscored: true,
+    timestamps: true,  // Automatically manages `createdAt` and `updatedAt`
+    tableName: 'jobs', // Optional: define table name
   
 });
 
-const Document = sequelize.define('Document', {
-    document_id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    document_name:{
-      type: DataTypes.STRING, 
-      allowNull: true,
-    },
-    // job_id: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    //   // foreignkey: true,
-    //   references: {
-    //       model: 'jobs',  // This should match the table name of the jobs model
-    //       key: 'jobs_id',       // The column in the jobs table to which this foreign key is pointing
-    //     },
-    // },
-    document_type:{
-        type: DataTypes.ENUM,
-        values: ['pdf', 'docx','txt'],  // List of document types
-        allowNull: false,
-    },    
-  },{
-          sequelize,
-          freezeTableName: true,
-          underscored: true,
-          timestamps: true,  // Automatically manages `createdAt` and `updatedAt`
-         tableName: 'documents', // Optional: define table name
-    
-});
+// Define associations
+Job.belongsTo(User, { foreignKey: 'user_id' });  // Establishes the foreign key relationship with User
 
+// Export the model
 module.exports = Job;
-module.exports = Document;

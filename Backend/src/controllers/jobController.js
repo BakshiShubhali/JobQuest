@@ -2,17 +2,19 @@
 "use strict";
 
 const jobModel = require("../models/jobModel");
+const documentModel = require("../models/documentModel");
+const upload = require("../middleware/upload"); // Import the multer upload config
 const responseMessage = require("../utils/responseMessages");
 
 const job = {};
 
 //add job after login
-/* { HTTP METHOD - POST, API ENDPOINT - http://localhost:3334/job/addJob }*/
+/* { HTTP METHOD - POST, API ENDPOINT - http://localhost:3336/job/addJob }*/
 job.addJob = async (req, res, next) => {
   try {
     const {
         job_id,
-        // document_id,
+        user_id,
         // company_id,
         job_title,
         job_category,
@@ -34,7 +36,7 @@ job.addJob = async (req, res, next) => {
     // Create a new job
     let job = await jobModel.create({
         job_id,
-        // document_id,
+        user_id,
         // company_id,
         job_title,
         job_category,
@@ -50,6 +52,7 @@ job.addJob = async (req, res, next) => {
     return res.status(200).send({
       status: true,
       message: responseMessage.ADD_JOB,
+      jobAdded: job
    });
 } catch (err) {
   return res.status(400).send({
@@ -60,7 +63,7 @@ job.addJob = async (req, res, next) => {
 };
 
  //get all jobs list
-/* { HTTP METHOD - GET, API ENDPOINT - http://localhost:3334/job/getAllJobs }*/
+/* { HTTP METHOD - GET, API ENDPOINT - http://localhost:3336/job/getAllJobs }*/
 job.getAllJobs = async (req, res, next) => {
   try {
     let jobsList = await jobModel.findAll()
@@ -83,6 +86,56 @@ job.getAllJobs = async (req, res, next) => {
       });
   } 
 };
+
+//upload document for jobs
+/* { HTTP METHOD - POST, API ENDPOINT - http://localhost:3336/document/uploadDocument }*/
+job.uploadDocument = [
+  upload.single('file_path'), // Multer middleware to handle single file upload
+  async (req, res, next) => {
+    try {
+
+      //Check if the document already exists for the job
+      let checkDoc = await documentModel.findOne({
+        where: {
+          job_id: req.body.job_id,
+        },
+        raw: true
+      });
+
+      if (checkDoc) {
+        return res.status(400).send({
+          status: false,
+          message: 'Document already exists for this job',
+        });
+      }
+
+      // Prepare data for the new document
+      const documentData = {
+        document_name: req.body.document_name, // From the request body
+        job_id: req.body.job_id, // From the request body
+        document_type: req.body.document_type, // From the request body
+        file_path: req.file.path, // File path from the uploaded file
+      };
+
+      // Save document information to the database
+      const savedDocument = await documentModel.create(documentData);
+
+      if (savedDocument) {
+        return res.status(201).send({
+          status: true,
+          message: 'Document uploaded successfully',
+          data: savedDocument,
+        });
+      }
+    } 
+    catch (err) {
+      return res.status(500).send({
+        status: false,
+        message: 'Error while uploading the document',
+      });
+    }
+  }
+];
 
 module.exports = job;
 
